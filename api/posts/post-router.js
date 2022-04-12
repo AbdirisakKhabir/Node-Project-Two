@@ -3,9 +3,8 @@ const express = require('express');
 // You will need `posts-model.js`
 // The middleware functions also need to be required
 
-const validateUserId = require('../middleware/index')
-const validateUser = require('../middleware/index')
-const validatePost = require('../middleware/index');
+const {validateUserId }= require('../middleware/index')
+const {validatePost} = require('../middleware/index');
 
 const postsModel = require('./post-model');
 const userModel = require('../users/user-model')
@@ -25,7 +24,7 @@ res.status(500).json({message: "Failed to get all Posts"})
     
   });
 
-  //Get single Post
+  // Get single Post
   router.get('/:id', async (req, res) => {
     // RETURN THE POST OBJECT
     try{
@@ -48,25 +47,25 @@ res.status(500).json({message: "Failed to get all Posts"})
     // RETURN THE ARRAY OF USER POSTS
     // this needs a middleware to verify user id
     try{
-      const post = await userModel.getUserPosts(req.params.user_id);
-      if(post){
-        res.status(200).json(post)
+      const posts = await userModel.getUserPosts(req.params.id);
+      if(posts){
+        res.status(200).json(posts)
       }
     }
     catch(err) {
-      res.status(500).json({ message: 'Failed to Get User Posts' });
+      res.status(500).json({ message: `Failed to Get User Posts' ${err}`});
   }
   });
 
-  //Add New Post
-  router.post('/:id/posts',validateUserId,validatePost, async (req, res) => {
+//   //Add New Post
+  router.post('/:id/posts',validatePost, async (req, res) => {
     // RETURN THE NEWLY CREATED USER POST
       // this needs a middleware to verify user id
     // and another middleware to check that the request body is valid
     try{
-      const post = await postsModel.insert(req.params.user_id, req.body  );
+      const post = await postsModel.insert(req.body, req.params.user_id );
       if(post){
-        console.log(post)
+        
         res.status(200).json(post)
       }else{
         res.status(404).json({ message: 'Post Not Found' });
@@ -74,7 +73,7 @@ res.status(500).json({message: "Failed to get all Posts"})
 
     }
     catch{
-      res.status(500).json({ message: 'Failed to Get User Posts' });
+      res.status(500).json({ message: 'Failed to Add New Posts' });
     }
  
   });
@@ -84,7 +83,7 @@ res.status(500).json({message: "Failed to get all Posts"})
     // RETURN THE FRESHLY UPDATED POST OBJECT
     // and another middleware to check that the request body is valid
     try {
-    const post = await postsModel.update(req.body)
+    const post = await postsModel.update(req.params.user_id)
     if(post){
       res.status(200).json(post)
     }
@@ -93,15 +92,15 @@ res.status(500).json({message: "Failed to get all Posts"})
     }
   }
   catch(err){
-    res.status(500).json({ message: 'Failed to Update Post' });
+    res.status(500).json({ message: `Failed to Update Post ${err}` });
   }
   });
 
-//Delete Post
+ //Delete Post
     router.delete('/:id',async(req, res) => {
     // RETURN DELETED POST OBJECT
     try{
-      const post = await postsModel.remove(req.params.user_id)
+      const post = await postsModel.remove(req.params.id)
       if (post) {
         res.status(200).json(post)
       }

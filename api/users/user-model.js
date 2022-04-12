@@ -37,9 +37,10 @@ function insert(post) {
 }
 
 function update(id, changes) {
-  return db('user')
+  return db('users')
     .where({ id })
-    .update(changes);
+    .update(changes)
+    
 }
 
 function remove(id) {

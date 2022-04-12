@@ -3,10 +3,16 @@ const express = require('express');
 // You will need `users-model.js`
 // The middleware functions also need to be required
 
+const {validateUserId }= require('../middleware/index')
+const {validateUser} = require('../middleware/index')
+
+
+
 const userModel = require('./user-model')
 
 const router = express.Router();
 
+//Get all Users
 router.get('/', async (req, res) => {
   // RETURN AN ARRAY WITH ALL THE USERS
   try {
@@ -33,12 +39,9 @@ router.get('/:id', validateUserId, async(req, res) => {
   catch (error) {
     res.status(500).json({message:'could not get One User'})
   }
- 
-
-
 });
 
-router.post('/', validatePost, async(req, res) => {
+router.post('/', validateUser, async(req, res) => {
   // RETURN THE NEWLY CREATED USER OBJECT
 
   // this needs a middleware to check that the request body is valid
@@ -56,14 +59,14 @@ router.post('/', validatePost, async(req, res) => {
  
 });
 
-router.put('/:id',validateUserId, validatePost, async (req, res) => {
+router.put('/:id',validateUserId, validateUser, async (req, res) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
   try {
-    const post = await userModel.update()
-    if(post) {
-      res.status(200).json(post)
+    const user = await userModel.update(req.params.id, req.body)
+    if(user) {
+      res.status(200).json(user)
     }else{
       res.status(404).json({message:'Failed to update User'})
     }
@@ -77,7 +80,7 @@ router.delete('/:id',validateUserId, async (req, res) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
   try {
-    const post = await userModel.remove(req.params.user_id)
+    const post = await userModel.remove(req.params.id)
   if(post) {
     res.status(200).json(post)
   }else{

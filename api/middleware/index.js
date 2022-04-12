@@ -1,7 +1,7 @@
   function validateUserId(req, res, next) {
       // DO YOUR MAGIC
-      const userPosts = req.params.user_id;
-      if(!userPosts){
+      const id = req.params.id;
+      if(!id){
         return res.status(400).json({ message: 'User Id is Required' });
       }
       next(); 
@@ -11,9 +11,9 @@
   
     function validateUser(req, res, next) {
       // DO YOUR MAGIC
-      const id = req.body.id;
+      const name = req.body.name;
   
-      if(!id) {
+      if(!name) {
           return res.status(400).json({ message: 'name Is Required' });
       }
   
@@ -24,6 +24,8 @@
   function validatePost(req, res, next) {
       // DO YOUR MAGIC
       const text = req.body.text;
+      const userId = req.body.user_id;
+      // const myId = req.params.id;
   
       if(!text) {
           return res.status(400).json({ message: 'Post Is Required' });
