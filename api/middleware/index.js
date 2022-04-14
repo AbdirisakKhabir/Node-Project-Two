@@ -24,7 +24,7 @@
   function validatePost(req, res, next) {
       // DO YOUR MAGIC
       const text = req.body.text;
-      const userId = req.body.user_id;
+      // const userId = req.body.user_id;
       // const myId = req.params.id;
   
       if(!text) {

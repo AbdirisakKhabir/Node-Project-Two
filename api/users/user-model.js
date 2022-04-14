@@ -24,7 +24,7 @@ function getUserPosts(id) {
         .where({ id })
         .then(user => {
             return db('posts')
-                .where({ user_id: user.id })
+                .where({ user_id: id })
         });
 }
 

@@ -43,7 +43,7 @@ res.status(500).json({message: "Failed to get all Posts"})
   });
 
 //Get User Posts
-  router.get('/:id/posts', validateUserId , async (req, res) => {
+  router.get('/:id/posts', async (req, res) => {
     // RETURN THE ARRAY OF USER POSTS
     // this needs a middleware to verify user id
     try{
@@ -82,8 +82,9 @@ res.status(500).json({message: "Failed to get all Posts"})
    router.put('/:id', validatePost, async (req, res) => {
     // RETURN THE FRESHLY UPDATED POST OBJECT
     // and another middleware to check that the request body is valid
+    console.log(req.body)
     try {
-    const post = await postsModel.update(req.params.user_id)
+    const post = await postsModel.update(req.params.id, req.body)
     if(post){
       res.status(200).json(post)
     }
